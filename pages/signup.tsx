@@ -16,7 +16,7 @@ const Home: NextPage = () => {
         <FormSignUp />
 
         <div className="my-4 py-4">
-          <Link href="/api/signin">
+          <Link href="/">
             <a className="text-white">Já tenho um cadastro</a>
           </Link>
         </div>
