@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import 'colors.scss';
+
+$theme-colors: (
+  'custom-orange': $custom-orange, 
+  'custom-navy': $custom-navy,
+  'custom-blue': $custom-blue
+);
+
+@import '~bootstrap/scss/bootstrap';
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background: $custom-navy;
+  color: #ffffff; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
