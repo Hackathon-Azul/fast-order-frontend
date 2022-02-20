@@ -4,7 +4,8 @@
 $theme-colors: (
   'custom-orange': $custom-orange, 
   'custom-navy': $custom-navy,
-  'custom-blue': $custom-blue
+  'custom-blue': $custom-blue,
+  'custom-green': $custom-green
 );
 
 @import '~bootstrap/scss/bootstrap';
@@ -13,6 +14,7 @@ $theme-colors: (
   --custom-orange: #EC5D37;
   --custom-navy: #141A32;
   --custom-blue: #014E70;
+  --custom-green: #27AE60;
 }
 
 html, body {

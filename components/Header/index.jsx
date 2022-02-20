@@ -1,20 +1,12 @@
-import { HederContainer, UserNameText, DescriptionText } from "./styles"
-import { Container } from "react-bootstrap"
-import SmallLogo from '../SmallLogo'
+import { HeaderContainer } from "./styles"
 
-const Header = () => {
-
-  const userName = "Fulano de Tal"
+const Header = ({children}) => {
   
   return (
     <>
-      <HederContainer>
-        <SmallLogo />
-        <UserNameText>Olá, {userName}</UserNameText>
-      </HederContainer>
-      <Container>
-        <DescriptionText>Escolha uma mesa para gerenciar os pedidos</DescriptionText>
-      </Container>
+      <HeaderContainer>
+        {children}
+      </HeaderContainer>
     </>
   )
 }
