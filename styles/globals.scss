@@ -9,6 +9,12 @@ $theme-colors: (
 
 @import '~bootstrap/scss/bootstrap';
 
+:root {
+  --custom-orange: #EC5D37;
+  --custom-navy: #141A32;
+  --custom-blue: #014E70;
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -17,9 +23,11 @@ html, body {
 
 body {
   font-family: 'Roboto', sans-serif;
-  background: $custom-navy;
+  background: var(--custom-navy);
   color: #ffffff; 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+}
+
+main {
+  text-align: center;
+  margin: 0 auto;
 }

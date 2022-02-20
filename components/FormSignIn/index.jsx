@@ -1,7 +1,8 @@
-import { FormControl, Form, FormGroup, Button } from "react-bootstrap"
+import { Container, FormControl, Form, FormGroup, Button } from "react-bootstrap"
 
 const FormSignUp = () => {
   return (
+    <Container>
     <Form>
         <FormGroup className="mb-3">
           <FormControl type="text" className="py-3" placeholder="seu@email.com" />
@@ -15,6 +16,7 @@ const FormSignUp = () => {
         </Button>
         </div>
     </Form>
+    </Container>
   )
 }
 

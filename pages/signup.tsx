@@ -1,13 +1,14 @@
 import type { NextPage } from 'next'
-import { Container } from 'react-bootstrap'
+// import { Container } from 'react-bootstrap'
+import styled from 'styled-components'
 import Logo from '../components/Logo'
 import FormSignUp from '../components/FormSignUp'
 import Link from 'next/link'
 
-const Home: NextPage = () => {
+const SingUp: NextPage = () => {
   return (
     <>
-      <Container className='text-center'>
+      <Container>
         <Logo />
 
         <h2 className="my-4">Seja bem vindo</h2>
@@ -26,4 +27,8 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home
+export default SingUp
+
+const Container = styled.div`
+
+`

@@ -1,12 +1,12 @@
 import type { NextPage } from 'next'
-import { Container } from 'react-bootstrap'
+import styled from 'styled-components'
 import Logo from '../components/Logo'
 import FormSignIn from '../components/FormSignIn'
 
 const Home: NextPage = () => {
   return (
     <>
-      <Container className='text-center'>
+      <Container>
         <Logo />
 
         <h5 className="my-4 pb-4">Nome do Restaurante</h5>
@@ -19,3 +19,7 @@ const Home: NextPage = () => {
 }
 
 export default Home
+
+const Container = styled.div`
+
+`
