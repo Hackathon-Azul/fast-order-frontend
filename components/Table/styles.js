@@ -11,6 +11,7 @@ export const TableItem = styled.a`
   cursor: pointer;
   text-decoration: none;
   text-transform: uppercase;
+  
 
   :hover {
     background-color: var(--custom-orange);

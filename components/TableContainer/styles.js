@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const TableContainerTag = styled.div`
-  width: 90%;
+  width: 96%;
   max-width: 900px;
   margin: 0 auto;
   background-color: rgba(255,255,255,0.1);
