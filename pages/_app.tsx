@@ -1,6 +1,14 @@
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import '../styles/globals.scss'
 import Head from 'next/head'
+import { AppProps } from 'next/app'
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { store, persistor } from "store";
+
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+toast.configure()
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -17,9 +25,11 @@ const theme = {
   },
 }
 
-export default function App({ Component, pageProps }) {
+export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
+      <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
       <GlobalStyle />
       <ThemeProvider theme={theme}>
       <Head>
@@ -28,6 +38,8 @@ export default function App({ Component, pageProps }) {
       </Head>
         <Component {...pageProps} />
       </ThemeProvider>
+      </PersistGate>
+    </Provider>
     </>
   )
 }
