@@ -66,7 +66,7 @@ const FormSignIn = () => {
   return (
     <Container>
       <Form onSubmit={handleSubmit}>
-        <FormGroup className="mb-3">
+        <FormGroup className="mb-3 mx-auto">
           <FormControl
             className="py-3"
             placeholder="seu@email.com"
@@ -97,6 +97,7 @@ const FormSignIn = () => {
             className="text-white"
             size="lg"
             type="submit"
+            
           >
             LOGIN
           </Button>

@@ -26,6 +26,7 @@
     "redux-persist": "6.0.0",
     "sass": "1.32.12",
     "styled-components": "^5.3.3",
+    "styled-media-query": "^2.1.2",
     "swr": "1.2.1"
   },
   "devDependencies": {

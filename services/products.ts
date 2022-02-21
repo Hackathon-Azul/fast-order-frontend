@@ -2,7 +2,7 @@ import api from './api';
 import Product from '../dtos/Product';
 import Meta from '../dtos/Meta';
 
-interface IProductsIndexData {
+export interface IProductsIndexData {
   products: Product[];
   meta: Meta;
 }
