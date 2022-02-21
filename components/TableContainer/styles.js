@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const TableContainerTag = styled.div`
-  width: 96%;
+  width: 90%;
   max-width: 900px;
   margin: 0 auto;
   background-color: rgba(255,255,255,0.1);
@@ -10,4 +10,8 @@ export const TableContainerTag = styled.div`
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
+
+  @media(max-width: 576px) {
+    width: 96%;
+  }
 `
