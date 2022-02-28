@@ -4,6 +4,12 @@ import media from 'styled-media-query'
 import { LogoProps } from '.'
 
 const wrapperModifiers = {
+
+  small: () => css`
+  width: 4rem;
+  height: 3rem;
+`,
+
   normal: () => css`
     width: 15rem;
     height: 7.3rem;
