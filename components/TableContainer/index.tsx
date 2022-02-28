@@ -24,7 +24,7 @@ const TableContainer = ({ data }: Props) => {
   return (
     <>
       {show && (
-        <Modal>
+        <Modal number={number}>
           {number}
           <span onClick={() => setShow(false)}>
             <FaTimesCircle size="28" />
