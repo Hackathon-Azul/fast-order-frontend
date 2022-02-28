@@ -1,7 +1,9 @@
 import { Modal, ModalOverlay } from "./styles"
 import { Button } from "react-bootstrap"
+import { useRouter } from "next/router"
 
-const TableOptions = ({children}) => {
+const TableOptions = ({children, number}) => {
+  const router = useRouter()
   return (
     <>
     <ModalOverlay>
@@ -14,7 +16,7 @@ const TableOptions = ({children}) => {
         <Button variant="custom-orange" className="text-white my-3" size="lg">
           Adicionar Pedido
         </Button>
-        <Button variant="custom-orange" className="text-white my-3" size="lg">
+        <Button variant="custom-orange" className="text-white my-3" size="lg" onClick={() => router.push(`tableOrder/${number.split(' ')[1]}`)}>
           Consultar Pedidos da mesa
         </Button>
       </Modal>
