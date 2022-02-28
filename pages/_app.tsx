@@ -11,17 +11,23 @@ import 'react-toastify/dist/ReactToastify.css';
 toast.configure()
 
 const GlobalStyle = createGlobalStyle`
-  body {
+  * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    text-align: center;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    &::before,
+    &::after {
+      box-sizing: inherit;
+    }
   }
 `
 
 const theme = {
   colors: {
     primary: '#0070f3',
+    header: '#014E70'
   },
 }
 
