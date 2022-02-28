@@ -4,6 +4,8 @@ import {
   Form,
   FormGroup,
   Button,
+  Col,
+  Row
 } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -13,6 +15,7 @@ import AuthState from "dtos/AuthState";
 import User from "dtos/User";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
+
 
 const FormSignIn = () => {
   const [email, setEmail] = useState("");
@@ -47,7 +50,7 @@ const FormSignIn = () => {
       if (router.query.callback) {
         router.push(decodeURIComponent(router.query.callback.toString()));
       } else {
-        router.push(user.profile === "Admin" ? "/Admin" : "/");
+        router.push(user.profile === "Admin" ? "/Admin" : "/tables");
       }
     } catch (err) {
       toast.error("E-mail ou senha inválidos!");
@@ -66,7 +69,9 @@ const FormSignIn = () => {
   return (
     <Container>
       <Form onSubmit={handleSubmit}>
-        <FormGroup className="mb-3 mx-auto">
+      <Row>
+        <Col lg={{ span: 6, offset: 3 }} md={{ span: 8, offset: 2 }}>
+        <FormGroup className="mb-3">
           <FormControl
             className="py-3"
             placeholder="seu@email.com"
@@ -102,6 +107,8 @@ const FormSignIn = () => {
             LOGIN
           </Button>
         </div>
+        </Col>
+      </Row>
       </Form>
     </Container>
   );
