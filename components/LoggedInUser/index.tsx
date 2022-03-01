@@ -1,9 +1,7 @@
-const LoggedInUser = ({children}) => {
-  return (
-    <>
-      <p style={{margin:0}}>{children}</p>  
-    </>
-  )
-}
+import * as S from "./styles";
 
-export default LoggedInUser
+const LoggedInUser = ({ children }) => {
+  return <S.UserNameText>{children}</S.UserNameText>;
+};
+
+export default LoggedInUser;

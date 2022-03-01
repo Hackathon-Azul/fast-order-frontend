@@ -8,7 +8,7 @@ import Link from "next/link";
 const Home: NextPage = () => {
   return (
     <>
-      <Container>
+      <Container style={{ marginTop: "35px"}}>
         <Logo size="large" />
 
         <h5 className="my-4 pb-4">Nome do Restaurante</h5>
@@ -32,8 +32,19 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  height: 650px;
+  height: auto;
+
   ${media.lessThan("medium")`
       width:125%;
+
+    .form-control {
+      margin: 20px auto;
+      width: 80%;
+    }
+
+    .btn-lg {
+      width: 80%;
+      margin: 0px auto;
+    }
     `}
 `;

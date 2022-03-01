@@ -1,15 +1,14 @@
 import type { NextPage } from 'next'
-// import { Container } from 'react-bootstrap'
 import styled from 'styled-components'
 import Logo from '../components/Logo'
 import FormSignUp from '../components/FormSignUp'
 import Link from 'next/link'
 import media from "styled-media-query";
 
-const SingUp: NextPage = () => {
+const SignUp: NextPage = () => {
   return (
     <>
-      <Container style={{ marginTop: "15px"}}>
+      <Container style={{ marginTop: "50px"}}>
         <Logo size="large" />
 
         <h2 className="my-4">Seja bem vindo</h2>
@@ -28,7 +27,7 @@ const SingUp: NextPage = () => {
   )
 }
 
-export default SingUp
+export default SignUp
 
 const Container = styled.div`
   display: flex;
@@ -36,8 +35,19 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  height: 650px;
+  height: auto;
+
   ${media.lessThan("medium")`
       width:125%;
+
+    .form-control {
+      margin: 20px auto;
+      width: 80%;
+    }
+
+    .btn-lg {
+      width: 80%;
+      margin: 0px auto;
+    }
     `}
 `;
