@@ -1,7 +1,9 @@
 import styled from "styled-components";
+import media from "styled-media-query";
 
 export const Modal = styled.div`
   width: 80%;
+  max-width: 450px;
   height: auto;
   background-color: var(--custom-blue);
   color: #fff;
@@ -14,6 +16,15 @@ export const Modal = styled.div`
   display: flex;
   flex-direction: column;
   z-index: 999;
+
+  ${media.lessThan("medium")`
+    button {
+      font-weight: 600;
+      font-size: 18px;
+      line-height: 21px;
+      text-align: center;
+    }
+  `}
 
   span {
     color: #fff;

@@ -20,11 +20,14 @@ const TableContainer = ({ data }: Props) => {
     setNumber(e.target.text);
   }
 
+  const element = data.find(item => item.table_number.toString() === number.split(' ')[1])
+  const avaliable = element && element.avaliable_table
+
 
   return (
     <>
       {show && (
-        <Modal number={number}>
+        <Modal number={number} disabled={avaliable} >
           {number}
           <span onClick={() => setShow(false)}>
             <FaTimesCircle size="28" />

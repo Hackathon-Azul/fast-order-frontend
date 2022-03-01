@@ -6,6 +6,8 @@ import TableType from "dtos/Table";
 import User from "dtos/User";
 import { useSelector } from "react-redux";
 import Logo from "components/Logo";
+import styled from "styled-components";
+import media from "styled-media-query";
 
 type Props = {
   data: [TableType];
@@ -22,9 +24,9 @@ const Tables: React.FC<Props> = ({ data }) => {
         <Logo size="small" />
         <LoggedInUser>Olá, {name + "!"}</LoggedInUser>
       </Header>
-      <p style={{ fontSize: 14, fontWeight: 600, marginTop: 15 }}>
+      <Title>
         Escolha uma mesa para gerenciar pedidos
-      </p>
+      </Title>
       <TableContainer data={data} />
     </>
   );
@@ -35,3 +37,21 @@ export async function getServerSideProps() {
   return { props: { data } };
 }
 export default Tables;
+
+const Title = styled.h1`
+  font-weight: 600;
+  font-size: 25px;
+  line-height: 18px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  text-align: center;
+
+  ${media.lessThan("medium")`
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 16px;
+    margin-top: 15px;
+    margin-bottom: 6px;
+
+  `}
+`
