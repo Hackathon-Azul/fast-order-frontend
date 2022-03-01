@@ -56,7 +56,7 @@ function setHeaders(res: AxiosResponse<any>) {
         err.response.status === 401 ||
         err.response.status === 403
       )) {
-      Router.push('/Auth/Login');
+      Router.push('/');
     }
   
     throw err;
@@ -65,7 +65,7 @@ function setHeaders(res: AxiosResponse<any>) {
   api.interceptors.request.use(req => {
     req.headers = { ContentType: 'application/json' };
   
-    if (
+  /*   if (
       req?.url?.includes('admin') ||
       req?.url?.includes('storefront/v1/wish_items') ||
       req?.url?.includes('auth/v1/user') ||
@@ -73,7 +73,7 @@ function setHeaders(res: AxiosResponse<any>) {
       req?.url?.includes('storefront/v1/checkouts') ||
       req?.url?.includes('storefront/v1/orders') ||
       req?.url?.includes('storefront/v1/games')
-    ) {
+    ) { */
       const apiDataCookie = Cookie.get('@api-data');
   
       if (!apiDataCookie) {
@@ -82,7 +82,7 @@ function setHeaders(res: AxiosResponse<any>) {
   
       const apiData: ApiData = JSON.parse(apiDataCookie);
       req.headers = { ...apiData, ...req.headers };
-    }
+   /*  } */
   
     return req;
   })
