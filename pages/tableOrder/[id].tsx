@@ -10,7 +10,7 @@ import {
   Row,
   Table,
 } from "react-bootstrap";
-import { BsPlus, BsTrash } from "react-icons/bs";
+import { BsCheck, BsPlus, BsTrash, BsX } from "react-icons/bs";
 import Header from "../../components/Header";
 import { BsChevronLeft } from "react-icons/bs";
 import { useEffect, useState } from "react";
@@ -88,24 +88,22 @@ const tableOrder: React.FC<Props> = ({
     );
     setSelectedProduct(newProducts as [Product]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCategory, productList]);
+  }, [selectedCategory]);
 
-  const removeProducts = (key: number, className) => {
-    console.log("oi", key, productList[key].price);
+  const removeProducts = (key: number, className: string) => {
     setTotalAmout(
       totalAmout - productList[key].price * productList[key].quantity
     );
     const newList = productList.splice(key, 1);
 
     setProductList(newList);
-    const classes = (className as string).split(" ")
-    const tableData = document.querySelector(`.${classes[0]}.${classes[1]}`)
-    tableData.remove()
+
+    const tableData = document.querySelector(`.${className}`);
+    tableData.remove();
   };
 
-
   return (
-    <>
+    <S.Wrapper>
       <Header>
         <Link href="/tables">
           <a style={{ color: "white", textDecoration: "none" }}>
@@ -119,7 +117,7 @@ const tableOrder: React.FC<Props> = ({
           <FormGroup className="mb-3">
             <FormControl
               as="select"
-              className="py-3 bg-white"
+              className="py-3 bg-white primary-form-control"
               onChange={(e) => setSelectedCategory(e.target.value)}
             >
               <option>Selecione a Categoria de Produtos</option>
@@ -138,7 +136,7 @@ const tableOrder: React.FC<Props> = ({
               onChange={chooseProduct}
             >
               <option>Produtos da Categoria</option>
-              {selectedProduct.map((product) => (
+              {selectedProduct.map((product: Product) => (
                 <option key={product.id} value={product.name}>
                   {product.name}
                 </option>
@@ -157,9 +155,11 @@ const tableOrder: React.FC<Props> = ({
           </FormGroup>
 
           <Row className="flex align-items-baseline">
-            <Col>
+            <Col lg={12}>
               <FormGroup className="mb-3">
-                <FormLabel>Preço: </FormLabel>
+                <FormLabel className="form-label-order" lg={6}>
+                  Preço:
+                </FormLabel>
                 <FormControl
                   type="number"
                   className="py-3"
@@ -168,9 +168,9 @@ const tableOrder: React.FC<Props> = ({
                 />
               </FormGroup>
             </Col>
-            <Col>
+            <Col lg={12}>
               <FormGroup className="mb-3">
-                <FormLabel>Quantidade: </FormLabel>
+                <FormLabel className="form-label-order">Quantidade: </FormLabel>
                 <FormControl
                   type="number"
                   className="py-3"
@@ -179,7 +179,7 @@ const tableOrder: React.FC<Props> = ({
                 />
               </FormGroup>
             </Col>
-            <Col sm={2}>
+            <Col lg={12} sm={2}>
               <div className="d-grid gap-2">
                 <Button
                   variant="custom-orange"
@@ -209,12 +209,22 @@ const tableOrder: React.FC<Props> = ({
             </thead>
             {productList.map((list, key) => (
               <tbody key={key}>
-                <tr className={list.name}>
+                <tr className={`product_${key}`}>
                   <td>{list.quantity}</td>
                   <td>{list.name}</td>
                   <td>{list.price * list.quantity}</td>
-                  <td style={{ alignItems: "center", display: "flex", justifyContent: "center"}}>
-                    <BsTrash color="red" onClick={() => removeProducts(key, list.name)} style={{ cursor: "pointer" }} />
+                  <td
+                    style={{
+                      alignItems: "center",
+                      display: "flex",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <BsTrash
+                      color="red"
+                      onClick={() => removeProducts(key, `product_${key}`)}
+                      style={{ cursor: "pointer" }}
+                    />
                   </td>
                 </tr>
               </tbody>
@@ -222,19 +232,30 @@ const tableOrder: React.FC<Props> = ({
           </Table>
         </div>
 
-        <Row className="flex align-items-baseline">
-          <Col>
+        <Row sm={10} className="flex align-items-baseline checkout-container">
+          <Col lg={6} sm={6}>
             <FormGroup className="mt-3">
-              <FormLabel>Total do pedido: </FormLabel>
+              <FormLabel className="form-label-order">
+                Total do pedido:
+              </FormLabel>
               <FormControl
-                type="number"
+                type="currency"
                 className="py-3"
                 readOnly
                 value={totalAmout}
               />
             </FormGroup>
           </Col>
-          <Col sm={4}>
+          <Col lg={1} md={4} sm={2}>
+            <Button
+              variant="custom-orange"
+              className="text-white btn-x"
+              size="lg"
+            >
+              <BsX  />
+            </Button>
+          </Col>
+          <Col lg={5} md={4} sm={2}>
             <S.ButtonContainer>
               <Button
                 variant="custom-green"
@@ -248,7 +269,7 @@ const tableOrder: React.FC<Props> = ({
           </Col>
         </Row>
       </Container>
-    </>
+    </S.Wrapper>
   );
 };
 
