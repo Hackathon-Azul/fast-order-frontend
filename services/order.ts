@@ -11,13 +11,22 @@ interface OrderIndexData {
 }
 
 const OrderService = {
-  index(url: string) {
+  index(url: string = '/storefront/v1/orders') {
     return api.get<OrderIndexData>(url).then(resp => resp.data.orders);
   },
 
   show(url: string) {
     return api.get<OrderShowData>(url).then(resp => resp.data.order);
-  }
+  },
+
+  update: ({id, ...rest}: Order) => {
+    return api.put<void>(`/storefront/v1/orders/${id}`, { rest });
+  },
+  // fu
+
+  create: (order: Order) => {
+    return api.post<void>('/storefront/v1/orders', order);
+  },
 }
 
 export default OrderService;

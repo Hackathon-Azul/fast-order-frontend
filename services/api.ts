@@ -52,7 +52,7 @@ function setHeaders(res: AxiosResponse<any>) {
     }
   
     // caso a response tenha um status de não autorizado ou acesso negado, o usuário será redirecionado para o login.
-    if (err.response && (
+    if (err.response && typeof window && (
         err.response.status === 401 ||
         err.response.status === 403
       )) {
@@ -65,15 +65,15 @@ function setHeaders(res: AxiosResponse<any>) {
   api.interceptors.request.use(req => {
     req.headers = { ContentType: 'application/json' };
   
-  /*   if (
-      req?.url?.includes('admin') ||
-      req?.url?.includes('storefront/v1/wish_items') ||
-      req?.url?.includes('auth/v1/user') ||
-      req?.url?.includes('storefront/v1/coupons') ||
-      req?.url?.includes('storefront/v1/checkouts') ||
-      req?.url?.includes('storefront/v1/orders') ||
-      req?.url?.includes('storefront/v1/games')
-    ) { */
+    // if (
+    //   req?.url?.includes('admin') ||
+    //   req?.url?.includes('storefront/v1/wish_items') ||
+    //   req?.url?.includes('auth/v1/user') ||
+    //   req?.url?.includes('storefront/v1/coupons') ||
+    //   req?.url?.includes('storefront/v1/checkouts') ||
+    //   req?.url?.includes('storefront/v1/orders') ||
+    //   req?.url?.includes('storefront/v1/games')
+    // ) {
       const apiDataCookie = Cookie.get('@api-data');
   
       if (!apiDataCookie) {
@@ -82,7 +82,7 @@ function setHeaders(res: AxiosResponse<any>) {
   
       const apiData: ApiData = JSON.parse(apiDataCookie);
       req.headers = { ...apiData, ...req.headers };
-   /*  } */
+    // }
   
     return req;
   })
