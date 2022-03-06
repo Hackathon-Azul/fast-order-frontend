@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import ProductShow from 'dtos/ProductShow';
+import ProductShow from 'dtos/Product';
 
 const cartReducer = createSlice({
   name: 'cartProducts',
