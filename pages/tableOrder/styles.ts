@@ -2,82 +2,46 @@ import media from "styled-media-query";
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
-  min-height: 1200px;
+  min-height: 950px;
 
   ${media.greaterThan("medium")`
-    .btn-x {
-    display: flex;
-    margin-top: 15px;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
+    .btn-plus {
+      margin-left: -4px !important;
     }
-    .btn-x > svg {
-      width: 40px;
-      height: 40px;
-    }
-    .form-control {
-      max-width: 600px;
-      margin: 0 auto;
+    .btn-btn-plus {
+      margin-right: 25px;
+
     }
 
-    .primary-form-control {
-        margin-top: 50px !important;
-      }
-
-    .form-label-order {
-    justify-content: start;
-    display: flex;
-    align-items: center;
-    margin-left: 23vw;
+    .btn-send {
+      padding-top: 14px;
     }
 
-    input[type="currency"] {
-      max-width: 350px;
-      margin-right: -15px;
+    .button-minus {
+      margin-left: -10px !important;
+
+    }
+    .btn-send, .btn-plus {
+      margin-top: 49px !important;
+      height: 58px;
+      text-align: center;
     }
 
 `}
   ${media.lessThan("medium")`
-input[type="currency"] {
-      max-width: 125px;
-      width: 25%;
-      height: 50px;
-      margin-top: 6px;
+     min-height: 1150px;
+
+      input[type="number"].b-qty {
+          margin-left: 6px;
+        }
+
+        .btn-btn-plus {
+      margin-bottom: 25px;
+
     }
 
-    .btn-x > svg {
-      width: 20px;
-      height: 20px;
-    }
-
-    .btn-x {
-    position: absolute;
-    left: 30%;
-    bottom: -307px;
-    }
-`}
-`;
-
-export const ButtonContainer = styled.div`
-  .btn-send {
-    ${media.lessThan("medium")`
-    position: absolute;
-    display: flex;
-    right: 11px;
-    bottom: -306px;
-    `}
-
-    ${media.greaterThan("medium")`
-    display: flex;
-    margin-top: 15px;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    height: 55px;
-    margin-left: -25px;
-
-    
-    `}
-  }
+        small {
+          display: none;
+        }
+   `}
 `;

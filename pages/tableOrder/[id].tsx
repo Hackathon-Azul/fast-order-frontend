@@ -10,7 +10,7 @@ import {
   Row,
   Table,
 } from "react-bootstrap";
-import { BsCheck, BsPlus, BsTrash, BsX } from "react-icons/bs";
+import { BsCheck, BsTrash, BsX } from "react-icons/bs";
 import Header from "../../components/Header";
 import { BsChevronLeft } from "react-icons/bs";
 import { useEffect, useState } from "react";
@@ -20,27 +20,57 @@ import ProductsService, { IProductsIndexData } from "services/products";
 import Product from "dtos/Product";
 import Link from "next/link";
 import * as S from "./styles";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addCartProduct,
+  clearCartProducts,
+  removeCartProduct,
+} from "store/modules/storefront/cartProducts/reducer";
+import OrderService from "services/order";
+import User from "dtos/User";
+import OrderItem from "dtos/OrderItem";
+import Router from "next/router";
+import AuthState from "dtos/AuthState";
 
 type Props = {
-  categories: { categories: Category[] };
+  categories: Category[];
   products: IProductsIndexData;
   id: number;
 };
 
-const tableOrder: React.FC<Props> = ({
-  categories: { categories },
-  products,
-  id,
-}) => {
+const tableOrder: React.FC<Props> = ({ categories, products, id }) => {
   const [productPrice, setProductPrice] = useState(0);
   const [productDescription, setProductDescription] = useState("");
-  const [productQuantity, setProductQuantity] = useState(0);
+  const [productQuantity, setProductQuantity] = useState(1);
   const [productList, setProductList] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState<[Product] | []>([]);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [client, setClient] = useState("Alan");
   const [totalAmout, setTotalAmout] = useState(0);
   const [product, setProduct] = useState<Product>();
   const [comments, setComments] = useState<string | undefined>();
+
+  const dispatch = useDispatch();
+
+ useEffect(() => {
+  dispatch(clearCartProducts());
+ // eslint-disable-next-line react-hooks/exhaustive-deps
+ }, [])
+
+  type State = {
+    cartProducts: {
+      quantity: number;
+      description: string;
+      name: string;
+      price: number;
+      productId: number;
+      comments: string;
+    }[];
+  };
+
+  const data = useSelector((state: State) => state.cartProducts);
+  const user: User = useSelector((state: AuthState) => state.auth.loggedUser);
 
   function chooseProduct(e) {
     let product = products.products.find(
@@ -58,28 +88,37 @@ const tableOrder: React.FC<Props> = ({
   }
 
   function calcPrice() {
-    const subTotal = productPrice * productQuantity;
     const total = productList.reduce(
       (acc, item) => acc + item.price * item.quantity,
-      subTotal
+      0
     );
     setTotalAmout(total);
+    console.log(total);
   }
 
   function applyProduct() {
-    setProductList((arr) => [
-      ...arr,
-      {
-        quantity: productQuantity,
-        description: productDescription,
-        name: product.name,
-        price: productPrice,
-        productId: product.id,
-        comments,
-      },
-    ]);
+    if (!selectedCategory || !product?.name) {
+      return toast.info("Selecione um produto primeiro");
+    }
 
-    calcPrice();
+    const newProduct = {
+      quantity: productQuantity,
+      description: productDescription,
+      name: product.name,
+      price: productPrice,
+      productId: product.id,
+      comments,
+    };
+
+    const isWithin = data.some((product) => product.name === newProduct.name);
+    if (!isWithin) {
+      dispatch(addCartProduct(newProduct as any));
+      productList.push(newProduct);
+      setProductList(productList);
+      calcPrice();
+    } else {
+      toast.info("Produto já adicionado na lista");
+    }
   }
 
   useEffect(() => {
@@ -90,16 +129,48 @@ const tableOrder: React.FC<Props> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCategory]);
 
-  const removeProducts = (key: number, className: string) => {
-    setTotalAmout(
-      totalAmout - productList[key].price * productList[key].quantity
-    );
-    const newList = productList.splice(key, 1);
+  const removeProducts = (key: number) => {
+    // const price = productList[key].price;
+    // const qty = productList[key].quantity;
+    // const value = price * qty;
+    // const total_value = totalAmout - value;
+    productList.splice(key, 1);
+    dispatch(removeCartProduct(key));
+    calcPrice();
+  };
 
-    setProductList(newList);
+  const removeAll = () => {
+    dispatch(clearCartProducts());
+    setProductList([]);
+    calcPrice();
+  };
 
-    const tableData = document.querySelector(`.${className}`);
-    tableData.remove();
+  const addOrder = () => {
+    const order_items_attributes = [] as unknown as [OrderItem];
+
+    data.map((item) => {
+      const order_item: OrderItem = {
+        quantity: item.quantity,
+        product_id: item.productId,
+        comments: item.comments,
+      };
+      order_items_attributes.push(order_item);
+    });
+
+    const order = {
+      table_id: id,
+      user_id: user.id,
+      client_name: client,
+      order_items_attributes,
+    };
+    try {
+      OrderService.create(order);
+      toast.success("Pedido enviado com sucesso!");
+      dispatch(clearCartProducts());
+      Router.push("/tables");
+    } catch (error) {
+      toast.error("Ops...Tente novamente mais tarde!");
+    }
   };
 
   return (
@@ -143,7 +214,15 @@ const tableOrder: React.FC<Props> = ({
               ))}
             </FormControl>
           </FormGroup>
-
+          <FormGroup className="mb-3">
+            <FormControl
+              as="textarea"
+              className="py-3"
+              placeholder="Descrição"
+              readOnly
+              value={productDescription}
+            />
+          </FormGroup>
           <FormGroup className="mb-3">
             <FormControl
               as="textarea"
@@ -153,50 +232,85 @@ const tableOrder: React.FC<Props> = ({
               onChange={(e) => setComments(e.target.value)}
             />
           </FormGroup>
-
-          <Row className="flex align-items-baseline">
-            <Col lg={12}>
-              <FormGroup className="mb-3">
-                <FormLabel className="form-label-order" lg={6}>
-                  Preço:
-                </FormLabel>
+          <Container>
+            <Row className="align-items-center">
+              <Col lg={4} sm={4} xs={4}>
+                <FormGroup className="mb-3">
+                  <FormLabel className="form-label-order" lg={12}>
+                    Preço:
+                  </FormLabel>
+                  <FormControl
+                    type="number"
+                    className="py-3"
+                    readOnly
+                    value={Number(productPrice).toFixed(2)}
+                  />
+                </FormGroup>
+              </Col>
+              <Button
+                as={Col}
+                lg={2}
+                xs={1}
+                className="button-plus mt-3 py-3"
+                size="lg"
+                variant="light"
+                style={{
+                  backgroundColor: "white",
+                  width: "56px",
+                  height: "59px",
+                }}
+                onClick={() => setProductQuantity(productQuantity + 1)}
+              >
+                +
+              </Button>
+              <FormGroup lg={2} as={Col} xs={3}>
                 <FormControl
                   type="number"
-                  className="py-3"
-                  readOnly
-                  value={Number(productPrice).toFixed(2)}
-                />
-              </FormGroup>
-            </Col>
-            <Col lg={12}>
-              <FormGroup className="mb-3">
-                <FormLabel className="form-label-order">Quantidade: </FormLabel>
-                <FormControl
-                  type="number"
-                  className="py-3"
+                  className="py-3 mt-3 b-qty"
+                  style={{ alignItems: "flex-end" }}
                   min="1"
+                  value={productQuantity}
                   onChange={chooseQuantity}
                 />
               </FormGroup>
-            </Col>
-            <Col lg={12} sm={2}>
-              <div className="d-grid gap-2">
+              <Col lg={2} sm={2} xs={1}>
                 <Button
-                  variant="custom-orange"
-                  className="text-white"
-                  size="lg"
-                  onClick={applyProduct}
+                  className="button-minus mt-3"
+                  variant="light"
+                  style={{
+                    backgroundColor: "white",
+                    width: "56px",
+                    height: "59px",
+                  }}
+                  onClick={() =>
+                    productQuantity > 1 &&
+                    setProductQuantity(productQuantity - 1)
+                  }
                 >
-                  Adicionar pedido <BsPlus size="36" />
+                  -
                 </Button>
-              </div>
-            </Col>
-          </Row>
+              </Col>
+
+              <Button
+                as={Col}
+                variant="custom-orange"
+                className="text-white btn-btn-plus mt-1"
+                size="lg"
+                onClick={applyProduct}
+              >
+                <BsCheck size="36" /> <small>Adicionar pedido</small>
+              </Button>
+            </Row>
+          </Container>
         </Form>
 
         <div
           className="bg-white py-2 px-2 text-custom-blue rounded"
-          style={{ height: 250, maxHeight: 250, overflow: "scroll" }}
+          style={{
+            height: 250,
+            maxHeight: 250,
+            overflow: "scroll",
+          }}
         >
           <Table responsive>
             <thead>
@@ -204,37 +318,31 @@ const tableOrder: React.FC<Props> = ({
                 <th>Quantidade</th>
                 <th>Produto</th>
                 <th>Subtotal</th>
-                <th>Remover</th>
+                <th>Ações</th>
               </tr>
             </thead>
-            {productList.map((list, key) => (
-              <tbody key={key}>
-                <tr className={`product_${key}`}>
-                  <td>{list.quantity}</td>
-                  <td>{list.name}</td>
-                  <td>{list.price * list.quantity}</td>
-                  <td
-                    style={{
-                      alignItems: "center",
-                      display: "flex",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <BsTrash
-                      color="red"
-                      onClick={() => removeProducts(key, `product_${key}`)}
-                      style={{ cursor: "pointer" }}
-                    />
-                  </td>
-                </tr>
-              </tbody>
-            ))}
+            {data.length > 0 &&
+              data.map((list, key) => (
+                <tbody key={key} className={`product_${key}_${list.productId}`}>
+                  <tr>
+                    <td>{list.quantity}</td>
+                    <td>{list.name}</td>
+                    <td>{list.price * list.quantity}</td>
+                    <td>
+                      <BsTrash
+                        color="red"
+                        onClick={() => removeProducts(key)}
+                        style={{ cursor: "pointer" }}
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              ))}
           </Table>
         </div>
-
-        <Row sm={10} className="flex align-items-baseline checkout-container">
-          <Col lg={6} sm={6}>
-            <FormGroup className="mt-3">
+        <Container>
+          <Row className="align-items-center justify-content-center">
+            <FormGroup as={Col} className="mt-3" lg={2}>
               <FormLabel className="form-label-order">
                 Total do pedido:
               </FormLabel>
@@ -245,39 +353,41 @@ const tableOrder: React.FC<Props> = ({
                 value={totalAmout}
               />
             </FormGroup>
-          </Col>
-          <Col lg={1} md={4} sm={2}>
             <Button
-              variant="custom-orange"
-              className="text-white btn-x"
+              as={Col}
+              variant="custom-orange btn-plus"
+              className="text-white mx-2 mt-3"
               size="lg"
+              lg={2}
+              onClick={removeAll}
             >
-              <BsX  />
+              <BsX />
             </Button>
-          </Col>
-          <Col lg={5} md={4} sm={2}>
-            <S.ButtonContainer>
-              <Button
-                variant="custom-green"
-                className="text-white btn-send"
-                size="lg"
-                onClick={() => {}}
-              >
-                ENVIAR PEDIDO
-              </Button>
-            </S.ButtonContainer>
-          </Col>
-        </Row>
+            <Button
+              as={Col}
+              variant="custom-green"
+              className="text-white btn-send mt-3"
+              size="lg"
+              lg={2}
+              onClick={addOrder}
+            >
+              ENVIAR PEDIDO
+            </Button>
+          </Row>
+        </Container>
       </Container>
     </S.Wrapper>
   );
 };
 
 export async function getServerSideProps({ params }) {
-  const categories = await CategoriesService.index();
+
+  const data = await CategoriesService.index();
+  const categories = data.categories;
   const products = await ProductsService.index(
-    "http://localhost:3000/storefront/v1/products?length=99"
+    "/storefront/v1/products?length=99"
   );
+
   return { props: { categories, products, id: params.id } };
 }
 
