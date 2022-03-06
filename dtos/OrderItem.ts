@@ -1,10 +1,10 @@
 import Product from "./Product"
 
 export default interface OrderItem {
-    id: number
+    id?: number
     quantity: number;
-    payed_price: number;
-    products: Product[];
+    products?: Product[];
+    product_id?: number;
     comments?: string;
   }
 

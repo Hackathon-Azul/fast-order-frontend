@@ -1,13 +1,12 @@
 import OrderItem from './OrderItem';
 
   export default interface Order {
-    id: number;
-    status: string;
-    table_id: number;
-    total_value: number;
-    user: number;
-    client: string
-    order_items: OrderItem[]
+    id?: number,
+    table_id: number,
+    total_value?: number,
+    status?: "Waiting" | "Avaliable" | "Finished" | "Cancelled",
+    user_id: number,
+    client_name: string,
+    order_items_attributes: OrderItem[]
   }
 
- 
