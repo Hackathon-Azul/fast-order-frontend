@@ -8,25 +8,31 @@ import { useSelector } from "react-redux";
 import Logo from "components/Logo";
 import styled from "styled-components";
 import media from "styled-media-query";
+import OrderService from "services/order";
+import uswr from "swr"
+import Order from "dtos/Order";
 
 type Props = {
   data: [TableType];
+  orders: [Order]
+
 };
 
 type State = {
   auth: { loggedUser: User };
 };
 const Tables: React.FC<Props> = ({ data }) => {
-  const { name }: User = useSelector((state: State) => state.auth.loggedUser);
+
+
+    const { name }: User = useSelector((state: State) => state.auth.loggedUser);
+
   return (
     <>
-      <Header>
+      <Header isSpaced>
         <Logo size="small" />
         <LoggedInUser>Olá, {name + "!"}</LoggedInUser>
       </Header>
-      <Title>
-        Escolha uma mesa para gerenciar pedidos
-      </Title>
+      <Title>Escolha uma mesa para gerenciar pedidos</Title>
       <TableContainer data={data} />
     </>
   );
@@ -54,4 +60,4 @@ const Title = styled.h1`
     margin-bottom: 6px;
 
   `}
-`
+`;

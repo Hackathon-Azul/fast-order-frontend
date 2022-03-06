@@ -1,10 +1,14 @@
 import { HeaderContainer } from "./styles"
 
-const Header = ({children}) => {
+export type HeaderProps = {
+  isSpaced?: boolean
+}
+
+const Header: React.FC<HeaderProps> = ({children, isSpaced = false}) => {
   
   return (
     <>
-      <HeaderContainer>
+      <HeaderContainer isSpaced={isSpaced}>
         {children}
       </HeaderContainer>
     </>
