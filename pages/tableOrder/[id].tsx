@@ -32,6 +32,8 @@ import User from "dtos/User";
 import OrderItem from "dtos/OrderItem";
 import Router from "next/router";
 import AuthState from "dtos/AuthState";
+import withAuth from "components/withAuth";
+import useSWR from "swr";
 
 type Props = {
   categories: Category[];
@@ -39,7 +41,7 @@ type Props = {
   id: number;
 };
 
-const tableOrder: React.FC<Props> = ({ categories, products, id }) => {
+const tableOrder: React.FC<Props> = ({ id }) => {
   const [productPrice, setProductPrice] = useState(0);
   const [productDescription, setProductDescription] = useState("");
   const [productQuantity, setProductQuantity] = useState(1);
@@ -53,10 +55,19 @@ const tableOrder: React.FC<Props> = ({ categories, products, id }) => {
 
   const dispatch = useDispatch();
 
- useEffect(() => {
-  dispatch(clearCartProducts());
- // eslint-disable-next-line react-hooks/exhaustive-deps
- }, [])
+  const { data: cat, error } = useSWR(
+    "/storefront/v1/categories",
+    CategoriesService.index
+  );
+  const { data: products, error: productsError } = useSWR(
+    "/storefront/v1/products?length=99",
+    ProductsService.index
+  );
+
+  useEffect(() => {
+    dispatch(clearCartProducts());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   type State = {
     cartProducts: {
@@ -122,6 +133,7 @@ const tableOrder: React.FC<Props> = ({ categories, products, id }) => {
   }
 
   useEffect(() => {
+    if (!products) return;
     const newProducts = products.products.filter(
       (product) => product.category.title === selectedCategory
     );
@@ -192,7 +204,7 @@ const tableOrder: React.FC<Props> = ({ categories, products, id }) => {
               onChange={(e) => setSelectedCategory(e.target.value)}
             >
               <option>Selecione a Categoria de Produtos</option>
-              {categories.map((category) => (
+              {cat?.categories.map((category) => (
                 <option key={category.id} value={category.title}>
                   {category.title}
                 </option>
@@ -381,14 +393,7 @@ const tableOrder: React.FC<Props> = ({ categories, products, id }) => {
 };
 
 export async function getServerSideProps({ params }) {
-
-  const data = await CategoriesService.index();
-  const categories = data.categories;
-  const products = await ProductsService.index(
-    "/storefront/v1/products?length=99"
-  );
-
-  return { props: { categories, products, id: params.id } };
+  return { props: { id: params.id } };
 }
 
-export default tableOrder;
+export default withAuth(tableOrder);
