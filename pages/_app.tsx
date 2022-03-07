@@ -1,14 +1,14 @@
-import { createGlobalStyle, ThemeProvider } from 'styled-components'
-import '../styles/globals.scss'
-import Head from 'next/head'
-import { AppProps } from 'next/app'
+import { createGlobalStyle, ThemeProvider } from "styled-components";
+import "../styles/globals.scss";
+import Head from "next/head";
+import { AppProps } from "next/app";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "store";
 
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-toast.configure()
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+toast.configure();
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -22,30 +22,30 @@ const GlobalStyle = createGlobalStyle`
       box-sizing: inherit;
     }
   }
-`
+`;
 
 const theme = {
   colors: {
-    primary: '#0070f3',
-    header: '#014E70'
+    primary: "#0070f3",
+    header: "#014E70",
   },
-}
+};
 
-export default function App({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <>
-      <Provider store={store}>
+    <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-      <GlobalStyle />
-      <ThemeProvider theme={theme}>
-      <Head>
-        <title>Pedido Rápido</title>
-        <link rel="icon" href="/favicon.png" />
-      </Head>
-        <Component {...pageProps} />
-      </ThemeProvider>
+        <GlobalStyle />
+        <ThemeProvider theme={theme}>
+          <Head>
+            <title>Pedido Rápido</title>
+            <link rel="icon" href="/favicon.png" />
+          </Head>
+          <Component {...pageProps} />
+        </ThemeProvider>
       </PersistGate>
     </Provider>
-    </>
-  )
+  );
 }
+
+export default MyApp;

@@ -2,7 +2,7 @@ import Product from "./Product";
 
 type ProductHome = Pick<
   Product,
-  "id" | "name" | "description" | "price" | "image_url"
+  "id" | "name" | "description" | "price"  
 >;
 
 export default ProductHome;
