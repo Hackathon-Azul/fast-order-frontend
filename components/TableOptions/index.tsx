@@ -40,6 +40,7 @@ const TableOptions: React.FC<Props> = ({
             variant="custom-orange"
             className="text-white my-3"
             size="lg"
+            disabled={!disabled}
             onClick={() =>
               disabled ? router.push(`/tableOrder/${num}`) : null
             }

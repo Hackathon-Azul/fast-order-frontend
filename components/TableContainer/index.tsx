@@ -9,7 +9,7 @@ import OrdersList from "dtos/OrdersList";
 import Order from "dtos/Order";
 
 type Props = {
-  data: [TableType];
+  data: TableType[];
 };
 const TableContainer = ({ data }: Props) => {
   const [show, setShow] = useState(false);
@@ -29,7 +29,7 @@ const TableContainer = ({ data }: Props) => {
     setNumber(e.target.text);
   }
 
-  const element = data.find(
+  const element = data?.find(
     (item) => item.table_number.toString() === number.split(" ")[1]
   );
   const avaliable = element && element.avaliable_table;
@@ -49,7 +49,7 @@ const TableContainer = ({ data }: Props) => {
         </Modal>
       )}
       <TableContainerTag>
-        {data.map((table) => (
+        {data?.map((table) => (
           <Table key={table.id} onClick={handleClick}>
             Mesa {table.table_number}
           </Table>
