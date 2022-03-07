@@ -2,10 +2,6 @@ import api from './api';
 import Order from '../dtos/Order';
 import OrdersList from '../dtos/OrdersList';
 
-interface OrderShowData {
-  order: Order;
-}
-
 interface OrderIndexData {
   orders: OrdersList[];
 }
@@ -16,7 +12,7 @@ const OrderService = {
   },
 
   show(url: string) {
-    return api.get<OrderShowData>(url).then(resp => resp.data.order);
+    return api.get<Order>(url).then(resp => resp.data);
   },
 
   update: ({id, ...rest}: Order) => {
