@@ -15,11 +15,13 @@ import AuthState from "dtos/AuthState";
 import User from "dtos/User";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
+import { FormLoading } from "components/Form/styles";
 
 
 const FormSignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const passwordRef = useRef(null);
 
   const router = useRouter();
@@ -30,6 +32,8 @@ const FormSignIn = () => {
 
   const handleSubmit = async (evt: React.FormEvent): Promise<void> => {
     evt.preventDefault();
+
+    setLoading(true)
 
     try {
       const response = await UsersService.signIn({ email, password });
@@ -44,6 +48,7 @@ const FormSignIn = () => {
       };
 
       dispatch(setLoggedUser(user));
+      setLoading(false)
 
       toast.info("Login realizado com sucesso!");
 
@@ -54,6 +59,8 @@ const FormSignIn = () => {
       }
     } catch (err) {
       toast.error("E-mail ou senha inválidos!");
+      setLoading(false)
+
     }
   };
 
@@ -104,7 +111,7 @@ const FormSignIn = () => {
             type="submit"
             
           >
-            LOGIN
+         {loading ? <FormLoading /> : "LOGIN"}
           </Button>
         </div>
         </Col>
@@ -115,3 +122,4 @@ const FormSignIn = () => {
 };
 
 export default FormSignIn;
+
