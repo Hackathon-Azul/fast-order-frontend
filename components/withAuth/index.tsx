@@ -19,12 +19,7 @@ const withAuth = (Component) => {
         !apiData['access-token'] ||
         apiData['access-token'] === ''
       ) {
-        router.push({
-          pathname: '/',
-          query: {
-            callback: router.pathname
-          }
-        });
+        router.push("/");
       }
 
       return <Component {...props}/>;
