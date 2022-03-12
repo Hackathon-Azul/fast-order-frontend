@@ -1,9 +1,9 @@
 import api from './api';
 import Meta from '../dtos/Meta';
-import OrdersList from '../dtos/OrdersList';
+import Order from 'dtos/Order';
 
 interface OrdersIndexData {
-  orders: OrdersList[];
+  orders: Order[];
   meta: Meta;
 }
 

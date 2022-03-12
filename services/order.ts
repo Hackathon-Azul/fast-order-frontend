@@ -1,9 +1,8 @@
 import api from './api';
 import Order from '../dtos/Order';
-import OrdersList from '../dtos/OrdersList';
 
 interface OrderIndexData {
-  orders: OrdersList[];
+  orders: Order[];
 }
 
 const OrderService = {
