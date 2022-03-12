@@ -10,6 +10,7 @@ import OrderService from "services/order";
 import useSwr from "swr";
 import media from "styled-media-query";
 import styled from "styled-components";
+import Loader from "components/Loader";
 
 type Props = {
   table?: number;
@@ -37,45 +38,49 @@ const Update: React.FC<Props> = ({ table, order }) => {
         </Link>
         <span>Mesa {table}</span>
       </Header>
-      <Container>
-        <p> Items do pedido de {data?.client_name}</p>
-        <TableContainerTag>
-          <Table responsive>
-            <thead>
-              <tr style={{ color: "white" }}>
-                <th>Quantidade</th>
-                <th>Produto</th>
-                <th>Subtotal</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            {data?.order_items_attributes.map((order) => (
-              <tbody key={order.id}>
+      {!data ? (
+        <Loader />
+      ) : (
+        <Container>
+          <p> Items do pedido de {data?.client_name}</p>
+          <TableContainerTag>
+            <Table responsive>
+              <thead>
                 <tr style={{ color: "white" }}>
-                  <td>{order.quantity}</td>
-                  {console.log(order.products)}
-
-                  <td>{order.products.name}</td>
-                  <td>{order.products.price * order.quantity}</td>
-                  <td>
-                    <BsTrash
-                      color="white"
-                      onClick={() => {}}
-                      style={{ cursor: "pointer" }}
-                    />
-                  </td>
+                  <th>Quantidade</th>
+                  <th>Produto</th>
+                  <th>Subtotal</th>
+                  <th>Ações</th>
                 </tr>
-              </tbody>
-            ))}
-          </Table>
-        </TableContainerTag>
-        <Button variant="custom-orange">
-          NOVO PEDIDO P/{" "}
-          {data?.client_name?.split(" ")[0]
-            ? data?.client_name?.split(" ")[0].toUpperCase()
-            : data?.client_name?.toUpperCase()}
-        </Button>
-      </Container>
+              </thead>
+              {data?.order_items_attributes.map((order) => (
+                <tbody key={order.id}>
+                  <tr style={{ color: "white" }}>
+                    <td>{order.quantity}</td>
+                    {console.log(order.products)}
+
+                    <td>{order.products.name}</td>
+                    <td>{order.products.price * order.quantity}</td>
+                    <td>
+                      <BsTrash
+                        color="white"
+                        onClick={() => {}}
+                        style={{ cursor: "pointer" }}
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              ))}
+            </Table>
+          </TableContainerTag>
+          <Button variant="custom-orange">
+            NOVO PEDIDO P/{" "}
+            {data?.client_name?.split(" ")[0]
+              ? data?.client_name?.split(" ")[0].toUpperCase()
+              : data?.client_name?.toUpperCase()}
+          </Button>
+        </Container>
+      )}
     </Wrapper>
   );
 };

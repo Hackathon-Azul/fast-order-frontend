@@ -34,6 +34,7 @@ import Router from "next/router";
 import AuthState from "dtos/AuthState";
 import withAuth from "components/withAuth";
 import useSWR from "swr";
+import { FormLoading } from "components/Form/styles";
 
 type Props = {
   categories: Category[];
@@ -52,6 +53,7 @@ const tableOrder: React.FC<Props> = ({ id }) => {
   const [totalAmout, setTotalAmout] = useState(0);
   const [product, setProduct] = useState<Product>();
   const [comments, setComments] = useState<string | undefined>();
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -63,6 +65,14 @@ const tableOrder: React.FC<Props> = ({ id }) => {
     "/storefront/v1/products?length=99",
     ProductsService.index
   );
+
+  if (error) {
+    toast.error("Erro ao obter as categorias");
+    console.log(error);
+  } else if(productsError) {
+    toast.error("Erro ao obter os produtos");
+    console.log(productsError);
+  }
 
   useEffect(() => {
     dispatch(clearCartProducts());
@@ -175,12 +185,15 @@ const tableOrder: React.FC<Props> = ({ id }) => {
       client_name: client,
       order_items_attributes,
     };
+    setLoading(true)
     try {
       OrderService.create(order);
       toast.success("Pedido enviado com sucesso!");
+      setLoading(false)
       dispatch(clearCartProducts());
       Router.push("/tables");
     } catch (error) {
+      setLoading(false)
       toast.error("Ops...Tente novamente mais tarde!");
     }
   };
@@ -383,7 +396,7 @@ const tableOrder: React.FC<Props> = ({ id }) => {
               lg={2}
               onClick={addOrder}
             >
-              ENVIAR PEDIDO
+            {loading ? <FormLoading /> : "ENVIAR PEDIDO"}  
             </Button>
           </Row>
         </Container>

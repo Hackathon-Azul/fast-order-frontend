@@ -5,8 +5,9 @@ import { useEffect, useState } from "react";
 import { FaTimesCircle } from "react-icons/fa";
 import TableType from "dtos/Table";
 import OrderService from "services/order";
-import OrdersList from "dtos/OrdersList";
+import OrdersList from "dtos/Order";
 import Order from "dtos/Order";
+import Loader from "components/Loader";
 
 type Props = {
   data: TableType[];
@@ -48,13 +49,17 @@ const TableContainer = ({ data }: Props) => {
           </span>
         </Modal>
       )}
-      <TableContainerTag>
-        {data?.map((table) => (
-          <Table key={table.id} onClick={handleClick}>
-            Mesa {table.table_number}
-          </Table>
-        ))}
-      </TableContainerTag>
+      {!data ? (
+        <Loader />
+      ) : (
+        <TableContainerTag>
+          {data?.map((table) => (
+            <Table key={table.id} onClick={handleClick}>
+              Mesa {table.table_number}
+            </Table>
+          ))}
+        </TableContainerTag>
+      )}
     </>
   );
 };
