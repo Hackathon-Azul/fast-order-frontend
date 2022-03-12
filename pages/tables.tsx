@@ -11,12 +11,12 @@ import useSWR from "swr";
 
 import withAuth from "components/withAuth";
 import { toast } from "react-toastify";
+import AuthState from "dtos/AuthState";
 
-type State = {
-  auth: { loggedUser: User };
-};
 const Tables: React.FC = () => {
-  const { name }: User = useSelector((state: State) => state.auth.loggedUser);
+  const { name }: User = useSelector(
+    (state: AuthState) => state.auth.loggedUser
+  );
   const { data, error } = useSWR("/storefront/v1/tables", TablesService.index);
 
   if (error) {
@@ -37,6 +37,22 @@ const Tables: React.FC = () => {
 };
 
 export default withAuth(Tables);
+
+export async function getServerSideProps(ctx) {
+  const authToken = ctx.req.cookies["%40api-data"];
+
+  if (!authToken) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
+}
 
 const Title = styled.h1`
   font-weight: 600;
