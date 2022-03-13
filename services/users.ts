@@ -19,7 +19,7 @@ interface SignUpData {
 
 const UsersService = {
   signUp: ({ name, email, password, password_confirmation }: SignUpData) =>
-    api.post<void>("/auth/v1/user", {
+    api.post<void>("/auth/v1/users", {
       name,
       email,
       password,
