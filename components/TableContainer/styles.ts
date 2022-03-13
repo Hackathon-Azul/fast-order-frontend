@@ -1,10 +1,16 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
-export const TableContainerTag = styled.div`
+type ContainerProps = {
+  isWhite?: boolean
+}
+
+export const TableContainerTag = styled.div<ContainerProps>`
+${({ theme, isWhite = false }) => css`
+
   width: 90%;
   max-width: 900px;
   margin: 0 auto;
-  background-color: rgba(255,255,255,0.1);
+  background-color: ${isWhite ? theme.colors.white : theme.colors.background};
   padding: 5px;
   border-radius: 5px;
   display: flex;
@@ -14,4 +20,6 @@ export const TableContainerTag = styled.div`
   @media(max-width: 576px) {
     width: 96%;
   }
+
+  `}
 `
