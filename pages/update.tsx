@@ -4,7 +4,6 @@ import withAuth from "components/withAuth";
 import Link from "next/link";
 import { Button, Container, Table } from "react-bootstrap";
 import { BsChevronLeft, BsTrash } from "react-icons/bs";
-import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import OrderService from "services/order";
 import useSwr from "swr";
@@ -85,8 +84,19 @@ const Update: React.FC<Props> = ({ table, order }) => {
   );
 };
 
-export async function getServerSideProps({ query }) {
-  return { props: { table: query.table, order: query.order } };
+export async function getServerSideProps(ctx) {
+  const authToken = ctx.req.cookies["%40api-data"];
+
+  if (!authToken) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return { props: { table: ctx.query.table, order: ctx.query.order } };
 }
 
 export default withAuth(Update);
