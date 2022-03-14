@@ -35,6 +35,8 @@ import AuthState from "dtos/AuthState";
 import withAuth from "components/withAuth";
 import useSWR from "swr";
 import { FormLoading } from "components/Form/styles";
+import Modal from "components/TableOptions";
+import { FaTimesCircle } from "react-icons/fa";
 
 type Props = {
   categories: Category[];
@@ -49,11 +51,12 @@ const tableOrder: React.FC<Props> = ({ id }) => {
   const [productList, setProductList] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState<[Product] | []>([]);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [client, setClient] = useState("Alan");
+  const [client, setClient] = useState("");
   const [totalAmout, setTotalAmout] = useState(0);
   const [product, setProduct] = useState<Product>();
   const [comments, setComments] = useState<string | undefined>();
   const [loading, setLoading] = useState(false);
+  const [show, setShow] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -69,7 +72,7 @@ const tableOrder: React.FC<Props> = ({ id }) => {
   if (error) {
     toast.error("Erro ao obter as categorias");
     console.log(error);
-  } else if(productsError) {
+  } else if (productsError) {
     toast.error("Erro ao obter os produtos");
     console.log(productsError);
   }
@@ -152,10 +155,7 @@ const tableOrder: React.FC<Props> = ({ id }) => {
   }, [selectedCategory]);
 
   const removeProducts = (key: number) => {
-    // const price = productList[key].price;
-    // const qty = productList[key].quantity;
-    // const value = price * qty;
-    // const total_value = totalAmout - value;
+
     productList.splice(key, 1);
     dispatch(removeCartProduct(key));
     calcPrice();
@@ -168,6 +168,7 @@ const tableOrder: React.FC<Props> = ({ id }) => {
   };
 
   const addOrder = () => {
+    
     const order_items_attributes = [] as unknown as [OrderItem];
 
     data.map((item) => {
@@ -185,21 +186,40 @@ const tableOrder: React.FC<Props> = ({ id }) => {
       client_name: client,
       order_items_attributes,
     };
-    setLoading(true)
+    setLoading(true);
     try {
       OrderService.create(order);
       toast.success("Pedido enviado com sucesso!");
-      setLoading(false)
+      setLoading(false);
       dispatch(clearCartProducts());
       Router.push("/tables");
+      Router.reload();
     } catch (error) {
-      setLoading(false)
+      setLoading(false);
       toast.error("Ops...Tente novamente mais tarde!");
     }
   };
 
   return (
     <S.Wrapper>
+      {show && (
+        <Modal
+          header="Digite o nome do cliente"
+          setName={setClient}
+          name={client}
+          createOrder={() => {
+            setShow(false)
+            addOrder()
+          }}
+          loading={loading}
+          isCheckout
+        >
+          {"Finalização do pedido"}
+          <span onClick={() => setShow(false)}>
+            <FaTimesCircle size="28" />
+          </span>
+        </Modal>
+      )}
       <Header>
         <Link href="/tables">
           <a style={{ color: "white", textDecoration: "none" }}>
@@ -394,9 +414,9 @@ const tableOrder: React.FC<Props> = ({ id }) => {
               className="text-white btn-send mt-3"
               size="lg"
               lg={2}
-              onClick={addOrder}
+              onClick={() => setShow(true)}
             >
-            {loading ? <FormLoading /> : "ENVIAR PEDIDO"}  
+              {loading ? <FormLoading /> : "ENVIAR PEDIDO"}
             </Button>
           </Row>
         </Container>

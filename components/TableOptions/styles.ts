@@ -1,5 +1,9 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import media from "styled-media-query";
+
+type ModalProps = {
+  isCheckout: boolean;
+};
 
 export const Modal = styled.div`
   width: 80%;
@@ -31,12 +35,14 @@ export const Modal = styled.div`
     cursor: pointer;
     float: right;
   }
-`
-export const ModalOverlay = styled.div`
-  width: 100%;
-  height: 100%;
-  top: 0;
-  background-color: rgba(0,0,0,0.6);
-  position: absolute;
-  z-index: 99;
-`
+`;
+export const ModalOverlay = styled.div<ModalProps>`
+  ${({ isCheckout }) => css`
+    width: 100vw;
+    min-height: ${isCheckout ? "1200px" : "100vh"};
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    position: absolute;
+    z-index: 99;
+  `}
+`;
