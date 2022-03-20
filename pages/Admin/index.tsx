@@ -6,8 +6,14 @@ import { Col, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import * as S from "./styles";
 import Image from "next/image";
+import ApiData from "dtos/ApiData";
+import withAuthAdmin from "components/withAuthAdmin";
+import { GetServerSidePropsContext } from "next";
+
 const Admin: React.FC = () => {
+
   const { name } = useSelector((state: AuthState) => state.auth.loggedUser);
+
   return (
     <S.Wrapper>
       <Header isSpaced>
@@ -79,4 +85,21 @@ const Admin: React.FC = () => {
   );
 };
 
-export default Admin;
+export default withAuthAdmin(Admin);
+
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+  const authToken: ApiData = ctx.req.cookies["%40api-data"] && JSON.parse(ctx.req.cookies["%40api-data"]);
+  const isExpired = authToken && authToken.expiry < (new Date() as any)/1000
+
+  if (!authToken || isExpired) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
+}
