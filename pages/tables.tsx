@@ -12,16 +12,25 @@ import useSWR from "swr";
 import withAuth from "components/withAuth";
 import { toast } from "react-toastify";
 import AuthState from "dtos/AuthState";
+import OrderService from "services/order";
 
 const Tables: React.FC = () => {
   const { name }: User = useSelector(
     (state: AuthState) => state.auth.loggedUser
   );
+
   const { data, error } = useSWR("/storefront/v1/tables", TablesService.index);
+  const { data: dataOrders, error: orderError } = useSWR("/storefront/v1/orders", OrderService.index);
+
 
   if (error) {
     toast.error("Erro ao obter dados das mesas!");
     console.log(error);
+  }
+
+  if (orderError) {
+    toast.error("Erro ao obter dados dos pedidos!");
+    console.log(orderError);
   }
 
   return (
@@ -31,7 +40,7 @@ const Tables: React.FC = () => {
         <LoggedInUser>Olá, {name + "!"}</LoggedInUser>
       </Header>
       <Title>Escolha uma mesa para gerenciar pedidos</Title>
-      <TableContainer data={data} />
+      <TableContainer data={data} orders={dataOrders} />
     </>
   );
 };

@@ -1,29 +1,19 @@
 import { TableContainerTag } from "./styles";
 import Table from "../Table";
 import Modal from "../TableOptions";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaTimesCircle } from "react-icons/fa";
 import TableType from "dtos/Table";
-import OrderService from "services/order";
-import OrdersList from "dtos/Order";
 import Order from "dtos/Order";
 import Loader from "components/Loader";
 
 type Props = {
   data: TableType[];
+  orders: Order[]
 };
-const TableContainer = ({ data }: Props) => {
+const TableContainer = ({ data, orders }: Props) => {
   const [show, setShow] = useState(false);
   const [number, setNumber] = useState("");
-  const [orders, setOrders] = useState<OrdersList[]>();
-
-  useEffect(() => {
-    async function fetchData() {
-      const orders = await OrderService.index();
-      setOrders(orders);
-    }
-    fetchData();
-  }, []);
 
   function handleClick(e) {
     setShow(!show);
@@ -39,7 +29,7 @@ const TableContainer = ({ data }: Props) => {
     <>
       {show && (
         <Modal
-          orders={orders as unknown as [Order]}
+          orders={orders}
           number={number}
           disabled={avaliable}
         >

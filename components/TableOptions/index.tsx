@@ -9,7 +9,7 @@ type Props = {
   children: React.ReactNode;
   number?: string;
   disabled?: boolean;
-  orders?: [Order];
+  orders?: Order[];
   isCheckout?: boolean;
   header?: string;
   createOrder?: () => void;
