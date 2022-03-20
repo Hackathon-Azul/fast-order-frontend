@@ -23,7 +23,7 @@ const OrderList: React.FC = () => {
   return (
     <Wrapper>
       <Header>
-      <Link href="/tables">
+        <Link href="/tables">
           <a style={{ color: "white", textDecoration: "none" }}>
             <BsChevronLeft size="36" />
           </a>
@@ -68,6 +68,8 @@ export async function getServerSideProps(ctx) {
 
 const Wrapper = styled.div`
   ${({ theme }) => css`
+    min-height: 120vh;
+
     p {
       text-align: center;
       margin-top: 2vw;
